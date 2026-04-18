@@ -53,7 +53,7 @@ paths:
                 name: "MacBook Pro M4"
                 description: "High-performance MAcbook with latest-generation processor M and 16 GB of RAM."
                 price: 6999.99
-                model: "MCBOOKM4"
+                model: "MCBOOKM4A0"
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -82,7 +82,7 @@ paths:
                 summary: Update description and model
                 value:
                   description: "High-performance Macbook with latest-generation processor M5 and 32 GB of RAM."
-                  model: "MCBOOKM5"
+                  model: "MCBOOKM5A0"
               updateDescriptionOnly:
                 summary: Update description only
                 value:
@@ -90,7 +90,7 @@ paths:
               updateModelOnly:
                 summary: Update model only
                 value:
-                  model: "MCBOOKM5"
+                  model: "MCBOOKM5A0"
       responses:
         '200':
           description: Product successfully updated.
@@ -103,7 +103,7 @@ paths:
                 name: "MacBook Pro M4"
                 description: "High-performance Macbook with latest-generation processor M5 and 32 GB of RAM."
                 price: 6999.99
-                model: "MCBOOKM5"
+                model: "MCBOOKM5A0"
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -144,6 +144,7 @@ components:
         name:
           type: string
           description: Product name. Cannot be updated.
+          pattern: '^[A-Za-z0-9 ]{1,20}$'
           minLength: 1
           maxLength: 20
           readOnly: true
@@ -158,18 +159,17 @@ components:
           type: number
           format: double
           description: Product price with two decimal places. Cannot be updated.
-          exclusiveMinimum: true
           minimum: 0
           multipleOf: 0.01
           readOnly: true
           example: 6999.99
         model:
           type: string
-          description: Product model. Alphanumeric, up to 10 characters. Updatable field.
-          pattern: '^[A-Za-z0-9]{1,10}$'
-          minLength: 1
+          description: Product model. Alphanumeric, 10 characters. Updatable field.
+          pattern: '^[A-Za-z0-9]{10}$'
+          minLength: 10
           maxLength: 10
-          example: "MCBOOKM4"
+          example: "MCBOOKM4A0"
 
     ProductUpdate:
       type: object
@@ -188,10 +188,10 @@ components:
         model:
           type: string
           description: New product model.
-          pattern: '^[A-Za-z0-9]{1,10}$'
-          minLength: 1
+          pattern: '^[A-Za-z0-9]{10}$'
+          minLength: 10
           maxLength: 10
-          example: "MCBOOKM5"
+          example: "MCBOOKM5A0"
 
     ErrorCode:
       type: string
