@@ -1,0 +1,328 @@
+openapi: 3.0.3
+info:
+  title: GAPSI Products API
+  description: |-
+    ### REST API for managing GAPSI's product catalog.
+
+    Allows different applications to **retrieve the details**
+    and **update specific data** of the products available in the company's
+    catalog.
+
+    #### Functional scope
+    - Retrieve the details of a product by its unique identifier.
+    - Partially update the allowed data of a specific product.
+
+    #### Error handling
+
+    Error responses follow a consistent JSON schema with a stable error
+    code, HTTP status, timestamp, and per-field validation details when
+    applicable.
+  contact:
+    email: andresle96@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local server
+  - url: https://gapsi-products-api-1001139871465.us-central1.run.app/api/v1
+    description: GCP Cloud Run (production)
+tags:
+  - name: Products
+    description: Retrieve and partially update products from the GAPSI catalog.
+paths:
+  /products/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+    get:
+      tags:
+        - Products
+      summary: Find product by id.
+      description: Retrieve the details of a specific product by its `id`.
+      operationId: findProductById
+      responses:
+        '200':
+          description: Product successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example:
+                id: "PRD0000001"
+                name: "MacBook Pro M4"
+                description: "High-performance MAcbook with latest-generation processor M and 16 GB of RAM."
+                price: 6999.99
+                model: "MCBOOKM4A0"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      tags:
+        - Products
+      summary: Update product.
+      description: |-
+        Partially update the allowed fields of a product identified by its `id`.
+        Only `description` and `model` can be updated; any other field in the
+        body will be rejected.
+      operationId: updateProduct
+      requestBody:
+        required: true
+        description: Fields to update. At least one must be provided.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdate'
+            examples:
+              updateBoth:
+                summary: Update description and model
+                value:
+                  description: "High-performance Macbook with latest-generation processor M5 and 32 GB of RAM."
+                  model: "MCBOOKM5A0"
+              updateDescriptionOnly:
+                summary: Update description only
+                value:
+                  description: "High-performance Macbook with latest-generation processor M5 and 32 GB of RAM."
+              updateModelOnly:
+                summary: Update model only
+                value:
+                  model: "MCBOOKM5A0"
+      responses:
+        '200':
+          description: Product successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example:
+                id: "PRD0000001"
+                name: "MacBook Pro M4"
+                description: "High-performance Macbook with latest-generation processor M5 and 32 GB of RAM."
+                price: 6999.99
+                model: "MCBOOKM5A0"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+
+  parameters:
+    ProductId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier of the product. Alphanumeric, 10 characters.
+      schema:
+        type: string
+        pattern: '^[A-Za-z0-9]{10}$'
+        minLength: 10
+        maxLength: 10
+        example: "PRD0000001"
+
+  schemas:
+
+    Product:
+      type: object
+      description: Full representation of a product in the catalog.
+      required: [id, name, description, price, model]
+      properties:
+        id:
+          type: string
+          description: Unique product key. Cannot be updated.
+          pattern: '^[A-Za-z0-9]{10}$'
+          minLength: 10
+          maxLength: 10
+          readOnly: true
+          example: "PRD0000001"
+        name:
+          type: string
+          description: Product name. Cannot be updated.
+          pattern: '^[A-Za-z0-9 ]{1,20}$'
+          minLength: 1
+          maxLength: 20
+          readOnly: true
+          example: "MacBook Pro M4"
+        description:
+          type: string
+          description: General description of the product. Updatable field.
+          minLength: 1
+          maxLength: 200
+          example: "High-performance Macbook with latest-generation processor M4 and 32 GB of RAM."
+        price:
+          type: number
+          format: double
+          description: Product price with two decimal places. Cannot be updated.
+          minimum: 0
+          multipleOf: 0.01
+          readOnly: true
+          example: 6999.99
+        model:
+          type: string
+          description: Product model. Alphanumeric, 10 characters. Updatable field.
+          pattern: '^[A-Za-z0-9]{10}$'
+          minLength: 10
+          maxLength: 10
+          example: "MCBOOKM4A0"
+
+    ProductUpdate:
+      type: object
+      description: |-
+        Fields allowed for the partial update of a product. At least one field
+        must be provided. Any additional property will be rejected.
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+          description: New general description of the product.
+          minLength: 1
+          maxLength: 200
+          example: "High-performance Macbook with latest-generation processor M5 and 32 GB of RAM."
+        model:
+          type: string
+          description: New product model.
+          pattern: '^[A-Za-z0-9]{10}$'
+          minLength: 10
+          maxLength: 10
+          example: "MCBOOKM5A0"
+
+    ErrorCode:
+      type: string
+      description: |-
+        Stable, machine-readable identifier of the error type. Clients can use
+        this value to branch behavior without depending on human-readable
+        messages.
+      enum:
+        - INVALID_REQUEST
+        - VALIDATION_ERROR
+        - READ_ONLY_FIELD
+        - PRODUCT_NOT_FOUND
+        - INTERNAL_ERROR
+
+    ErrorResponse:
+      type: object
+      description: |-
+        Standard error response returned by the API for any non-2xx outcome.
+      required: [code, message, status, timestamp, path]
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+        message:
+          type: string
+          description: Human-readable summary of the error.
+          example: "No product was found with the provided id."
+        status:
+          type: integer
+          description: HTTP status code.
+          example: 404
+        timestamp:
+          type: string
+          format: date-time
+          description: Moment the error was generated (ISO-8601, UTC).
+          example: "2026-04-18T15:30:45.123Z"
+        path:
+          type: string
+          description: Request path that produced the error.
+          example: "/products/PRD9999999"
+        errors:
+          type: array
+          description: Per-field error details. Present only for validation errors.
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field:
+                type: string
+                example: "description"
+              message:
+                type: string
+                example: "Must not exceed 200 characters."
+
+  responses:
+
+    BadRequest:
+      description: |-
+        The request is invalid. Possible causes include a malformed JSON body,
+        an empty body, a path parameter that does not match the required
+        format, a field value that fails validation, or an attempt to modify
+        a read-only field (`id`, `name`, `price`).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalidIdFormat:
+              summary: Path id does not match the required format
+              value:
+                code: "INVALID_REQUEST"
+                message: "The provided id does not match the required format (10 alphanumeric characters)."
+                status: 400
+                timestamp: "2026-04-18T15:30:45.123Z"
+                path: "/products/INVALID"
+            emptyBody:
+              summary: Empty or missing request body
+              value:
+                code: "INVALID_REQUEST"
+                message: "The request body must contain at least one of the allowed fields: description, model."
+                status: 400
+                timestamp: "2026-04-18T15:30:45.123Z"
+                path: "/products/PRD0000001"
+            readOnlyField:
+              summary: Attempt to update a read-only field
+              value:
+                code: "READ_ONLY_FIELD"
+                message: "One or more fields cannot be modified."
+                status: 400
+                timestamp: "2026-04-18T15:30:45.123Z"
+                path: "/products/PRD0000001"
+                errors:
+                  - field: "price"
+                    message: "The 'price' field is read-only."
+                  - field: "name"
+                    message: "The 'name' field is read-only."
+            validationError:
+              summary: A field value violates validation rules
+              value:
+                code: "VALIDATION_ERROR"
+                message: "One or more fields failed validation."
+                status: 400
+                timestamp: "2026-04-18T15:30:45.123Z"
+                path: "/products/PRD0000001"
+                errors:
+                  - field: "description"
+                    message: "Must not exceed 200 characters."
+                  - field: "model"
+                    message: "Must be alphanumeric, up to 10 characters."
+
+    NotFound:
+      description: No product exists with the provided identifier.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: "PRODUCT_NOT_FOUND"
+            message: "No product was found with the provided id."
+            status: 404
+            timestamp: "2026-04-18T15:30:45.123Z"
+            path: "/products/PRD9999999"
+
+    InternalServerError:
+      description: Unexpected internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: "INTERNAL_ERROR"
+            message: "An unexpected error occurred while processing the request."
+            status: 500
+            timestamp: "2026-04-18T15:30:45.123Z"
+            path: "/products/PRD0000001"
