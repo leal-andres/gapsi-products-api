@@ -24,6 +24,10 @@ Los códigos de error del `ErrorResponse` están definidos en el OpenAPI: `INVAL
 - Swagger UI (Cloud Run): https://gapsi-products-api-1001139871465.us-central1.run.app/swagger-ui.html
 - Colección Postman: [docs/postman/GAPSI Products API.postman_collection.json](docs/postman/GAPSI%20Products%20API.postman_collection.json)
 
+## Video demo
+
+Invocación del servicio con Postman y configuración en GCP: https://www.loom.com/share/5983abd241074f59a0eb5087de1a3237
+
 ## Variables de entorno
 
 | Variable | Descripción | Ejemplo |
