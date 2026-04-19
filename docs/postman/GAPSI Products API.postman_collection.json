@@ -1,0 +1,525 @@
+{
+	"info": {
+		"_postman_id": "85774740-f6de-4aec-a3fa-44c86a1687b5",
+		"name": "GAPSI Products API",
+		"description": "Endpoints to manage products",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4273621"
+	},
+	"item": [
+		{
+			"name": "Update products",
+			"item": [
+				{
+					"name": "Update description and model",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"High-performance Macbook with latest-generation processor M5 and 32 GB of RAM.\",\n  \"model\": \"MCBOOKM5A0\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{existingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{existingProductId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update description only",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"High-performance Macbook with latest-generation processor M5 and 16 GB of RAM.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{existingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{existingProductId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Udate model only",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"model\": \"MCBOOKM5A0\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{existingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{existingProductId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid id format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"model\": \"MCBOOKM5A0\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/PRD123",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"PRD123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Empty body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{existingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{existingProductId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Description too long",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{existingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{existingProductId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid model format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"model\": \"bad-model\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{existingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{existingProductId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read-only field sent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": 999.99\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{existingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{existingProductId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Malformed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"description\": "
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{existingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{existingProductId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Product not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"model\": \"MCBOOKM5A0\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{missingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{missingProductId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get products",
+			"item": [
+				{
+					"name": "Get product by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/{{existingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{existingProductId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid id format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/PRD123",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"PRD123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Product not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/{{missingProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{missingProductId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://gapsi-products-api-1001139871465.us-central1.run.app/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "existingProductId",
+			"value": "PRD0000001",
+			"type": "string"
+		},
+		{
+			"key": "missingProductId",
+			"value": "PRD9999999",
+			"type": "string"
+		}
+	]
+}
